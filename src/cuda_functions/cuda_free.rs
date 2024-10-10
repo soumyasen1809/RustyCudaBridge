@@ -7,6 +7,8 @@ pub fn cuda_free(dev_ptr: *mut u8) -> Result<(), cudaError_t> {
 
     match result {
         cudaError_t::cudaSuccess => Ok(()),
+        cudaError_t::cudaErrorInvalidDevicePointer => Err(result),
+        cudaError_t::cudaErrorInitializationError => Err(result),
         _ => Err(result),
     }
 }
