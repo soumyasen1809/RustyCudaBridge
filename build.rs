@@ -8,6 +8,11 @@ fn main() {
     // Link to the CUDA runtime library (libcudart)
     println!("cargo:rustc-link-lib=cudart");
 
+    println!("cargo:rustc-link-search=native=cuda_kernels"); // Path to where libvec_add.so is
+                                                             // Specify the directory containing `libadd.so` (not the file itself)
+    println!("cargo:rustc-link-lib=dylib=add"); // Link to libvec_add.so (without the 'lib' prefix)
+    println!("cargo:rustc-link-arg=-Wl,-rpath=./cuda_kernels"); // Add rpath to embed the library search path in the binary
+
     // If necessary, specify the path to the CUDA library (if installed in a non-standard location)
     // println!("cargo:rustc-link-search=/usr/local/cuda/lib64");
 }
