@@ -15,6 +15,8 @@ pub fn cuda_malloc(dev_ptr: *mut *mut u8, size: usize) -> Result<(), cudaError_t
 
 #[cfg(test)]
 mod tests {
+    use crate::cuda_functions::cuda_free::cuda_free;
+
     use super::*;
 
     #[test]
@@ -24,5 +26,8 @@ mod tests {
         let _ = cuda_malloc(&mut src, 10 * std::mem::size_of::<i32>());
 
         assert!(!src.is_null()); // assert src is not null means the memory allocation is successful
+
+        // Free cuda memory
+        let _ = cuda_free(src);
     }
 }

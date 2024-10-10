@@ -27,7 +27,7 @@ pub fn cuda_memcpy(
 
 #[cfg(test)]
 mod tests {
-    use crate::cuda_functions::cuda_malloc::cuda_malloc;
+    use crate::cuda_functions::{cuda_free::cuda_free, cuda_malloc::cuda_malloc};
 
     use super::*;
 
@@ -59,5 +59,8 @@ mod tests {
         );
 
         assert!(test_result.is_ok());
+
+        // Free cuda memory
+        let _ = cuda_free(dst);
     }
 }
