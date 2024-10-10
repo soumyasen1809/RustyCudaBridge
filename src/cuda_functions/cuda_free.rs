@@ -20,7 +20,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_cuda_malloc() {
+    fn test_cuda_free() {
         let mut src = std::ptr::null_mut(); // This is almost never what you want
                                             // https://stackoverflow.com/questions/47878236/how-do-i-make-the-equivalent-of-a-c-double-pointer-in-rust
         let _ = cuda_malloc(&mut src, 10 * std::mem::size_of::<i32>());

@@ -21,7 +21,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_cuda_malloc() {
+    fn test_cuda_free_host() {
         let src_vec = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         let mut src = std::ptr::null_mut();
         // The src pointer is initialized to std::ptr::null_mut(),

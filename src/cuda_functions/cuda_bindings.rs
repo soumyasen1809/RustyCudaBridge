@@ -1,5 +1,5 @@
 #![allow(non_camel_case_types)]
-use libc::size_t;
+use libc::{c_int, size_t};
 use std::ffi::c_void;
 
 #[link(name = "cuda")]
@@ -40,10 +40,16 @@ extern "C" {
     ) -> cudaError_t;
 }
 
-/// https://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/html/group__CUDART__TYPES_g3f51e3575c2178246db0a94a430e0038.html#g3f51e3575c2178246db0a94a430e0038
+#[link(name = "cuda")]
+extern "C" {
+    // https://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/html/group__CUDART__MEMORY_ge07c97b96efd09abaeb3ca3b5f8da4ee.html#ge07c97b96efd09abaeb3ca3b5f8da4ee
+    pub fn cudaMemset(devPtr: *mut c_void, value: c_int, count: size_t) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
+    // https://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/html/group__CUDART__TYPES_g3f51e3575c2178246db0a94a430e0038.html#g3f51e3575c2178246db0a94a430e0038
     cudaSuccess = 0,
     cudaErrorInvalidValue = 1,
     cudaErrorMemoryAllocation = 2,
