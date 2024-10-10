@@ -18,6 +18,12 @@ extern "C" {
     pub fn cudaMalloc(devPtr: *mut *mut c_void, size: size_t) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://developer.download.nvidia.com/compute/DevZone/docs/html/C/doc/html/group__CUDART__MEMORY_gb17fef862d4d1fefb9dba35bd62a187e.html#gb17fef862d4d1fefb9dba35bd62a187e
+    pub fn cudaFree(devPtr: *mut c_void) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
