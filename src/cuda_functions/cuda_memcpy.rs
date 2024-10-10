@@ -27,10 +27,12 @@ pub fn cuda_memcpy(
 
 #[cfg(test)]
 mod tests {
+    use crate::cuda_functions::cuda_malloc::cuda_malloc;
+
     use super::*;
 
     #[test]
-    fn test_cuda_memcpy() {
+    fn test_cuda_memcpy_fail() {
         let src = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         let mut dst = vec![0; src.len()];
         let test_result = cuda_memcpy(
@@ -42,5 +44,20 @@ mod tests {
         .unwrap_err(); // Error because dst needs to be on the device
 
         assert!(test_result == cudaError_t::cudaErrorInvalidValue);
+    }
+
+    #[test]
+    fn test_cuda_memcpy() {
+        let src = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let mut dst = std::ptr::null_mut();
+        let _ = cuda_malloc(&mut dst, src.len() * size_of::<i32>());
+        let test_result = cuda_memcpy(
+            dst,
+            src.as_ptr(),
+            src.len(),
+            cudaMemcpyKind::cudaMemcpyHostToDevice,
+        );
+
+        assert!(test_result.is_ok());
     }
 }
