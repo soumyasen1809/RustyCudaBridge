@@ -1,0 +1,9 @@
+[package]
+name = "rusty_cuda_bridge"
+version = "0.1.0"
+edition = "2021"
+
+rustflags = ["-L /usr/local/cuda/lib64", "-I /usr/local/cuda/include"]
+
+[dependencies]
+libc = "0.2.159"
