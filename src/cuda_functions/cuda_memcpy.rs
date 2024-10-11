@@ -3,9 +3,9 @@ use std::ffi::c_void;
 
 use crate::cuda_functions::cuda_bindings::{cudaError_t, cudaMemcpy, cudaMemcpyKind};
 
-pub fn cuda_memcpy(
-    dst: *mut u8,
-    src: *const u8,
+pub fn cuda_memcpy<T>(
+    dst: *mut T,
+    src: *const T,
     count: usize,
     kind: cudaMemcpyKind,
 ) -> Result<(), cudaError_t> {

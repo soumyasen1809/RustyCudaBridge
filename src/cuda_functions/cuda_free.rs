@@ -2,7 +2,7 @@ use std::ffi::c_void;
 
 use super::cuda_bindings::{cudaError_t, cudaFree};
 
-pub fn cuda_free(dev_ptr: *mut u8) -> Result<(), cudaError_t> {
+pub fn cuda_free<T>(dev_ptr: *mut T) -> Result<(), cudaError_t> {
     let result = unsafe { cudaFree(dev_ptr as *mut c_void) };
 
     match result {
