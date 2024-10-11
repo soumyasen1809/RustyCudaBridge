@@ -10,6 +10,8 @@ extern "C" {
 }
 
 pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cudaError_t> {
+    assert!(a.len() == b.len());
+    assert!(a.len() == n as usize);
     let c = vec![0; n as usize];
 
     // Allocate memory on the device
