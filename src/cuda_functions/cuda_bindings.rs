@@ -993,32 +993,18 @@ pub enum cudaHostAllocFlag {
     cudaHostAllocWriteCombined = 3,
 }
 
-// #[repr(C)]
-// pub struct CUstream {
-//     // https://docs.rs/cuda-sys/latest/cuda_sys/cuda/struct.CUstream_st.html
-//     pub _address: u8,
-// }
-
-// #[repr(C)]
-// pub struct CUfunction {
-//     //https://docs.rs/cuda-driver-sys/latest/cuda_driver_sys/struct.CUfunc_st.html
-//     _unused: [u8; 0],
-// }
-
-// pub struct CUstream(c_void);
-
-// pub struct CUfunction(c_void); // Using c_void abstracts away the underlying implementation details
-//                                // of CUfunction. You don't need to know the exact structure or contents
-//                                // of a CUfunction object in Rust.
-
 #[repr(C)]
 pub struct CUstream_st(c_void);
+// https://docs.rs/cuda-sys/latest/cuda_sys/cuda/struct.CUstream_st.html
 pub type CUstream = *mut CUstream_st;
 
 #[repr(C)]
 pub struct CUfunc_st(c_void);
+//https://docs.rs/cuda-driver-sys/latest/cuda_driver_sys/struct.CUfunc_st.html
 pub type CUfunction = *mut CUfunc_st;
 
 #[repr(C)]
-pub struct CUmod_st(c_void);
+pub struct CUmod_st(c_void); // Using c_void abstracts away the underlying implementation details
+                             //                                // of CUfunction. You don't need to know the exact structure or contents
+                             //                                // of a CUfunction object in Rust.
 pub type CUmodule = *mut CUmod_st;

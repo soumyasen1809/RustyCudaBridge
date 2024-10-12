@@ -104,22 +104,11 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
         crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyHostToDevice,
     )?;
 
-    // Call the kernel
-    // unsafe {
-    //     launch_vec_add(
-    //         dev_a as *const i32,
-    //         dev_b as *const i32,
-    //         dev_c as *mut i32,
-    //         n,
-    //     );
-    // }
-
-    // .........................................
     // cuLaunchKernel
-    let f: CUfunction = std::ptr::null_mut();
+    let mut f: CUfunction = std::ptr::null_mut();
     let h_stream: CUstream = std::ptr::null_mut();
 
-    // ChatGPT help
+    // param_array: ChatGPT help
     // https://chatgpt.com/share/670afffd-cf64-8008-b96b-18b867d50200
     let param_array: &[*mut i32] = &[
         &mut dev_a as *mut _ as *mut i32,
@@ -135,11 +124,10 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
     let block_dim_y = 1;
     let block_dim_z = 1;
     let shared_mem_bytes = 0;
-    // let kernel_params: *mut *mut i32 = std::ptr::null_mut();
     let kernel_params = param_array.as_ptr() as *mut _;
     let extra: *mut *mut i32 = std::ptr::null_mut();
 
-    let name_string = CString::new("kernel_name").expect("Issue in name_string for get_function");
+    let name_string = CString::new("vec_add").expect("Issue in name_string"); // name of kernel from PTX: vec_add
     let name = name_string.as_ptr();
     let mut hmod = std::ptr::null_mut();
 
@@ -157,8 +145,7 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
     };
     println!("module: {:?}", hmod); // hmod should not be 0x00
 
-    get_function(f as *mut CUfunction, hmod, name).expect("Issue in get_function");
-    println!("name: {:?}", name);
+    get_function(&mut f as *mut CUfunction, hmod, name).expect("Issue in get_function");
 
     launch_kernel(
         f,
@@ -174,7 +161,6 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
         extra as *mut _,
     )
     .expect("Issue in launch_kernel");
-    // .........................................
 
     // Copy vec from device to host
     cuda_memcpy(
