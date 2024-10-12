@@ -66,8 +66,6 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
     cuda_free(dev_b)?;
     cuda_free(dev_c)?;
 
-    println!("{:?}", c);
-
     Ok(c)
 }
 
