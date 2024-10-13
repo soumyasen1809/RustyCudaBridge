@@ -1,74 +1,14 @@
-// The #[link] attribute links your Rust code with the libadd.so shared library.
-
-use std::{
-    ffi::{c_uint, c_void, CString},
-    path::Path,
-};
-
-use libc::c_char;
+use std::{ffi::CString, path::Path};
 
 use crate::cuda_functions::{
-    cuda_bindings::{
-        cuLaunchKernel, cuModuleGetFunction, cuModuleLoad, cudaError_t, CUfunction, CUmodule,
-        CUstream,
-    },
+    cuda_bindings::{cudaError_t, CUfunction, CUstream},
     cuda_free::cuda_free,
+    cuda_launch_kernel::cuda_launch_kernel,
     cuda_malloc::cuda_malloc,
     cuda_memcpy::cuda_memcpy,
+    cuda_module_get_function::cuda_module_get_function,
+    cuda_module_load::cuda_module_load,
 };
-
-// #[link(name = "add", kind = "dylib")]
-// extern "C" {
-//     fn launch_vec_add(a: *const i32, b: *const i32, c: *mut i32, n: i32);
-// }
-
-pub fn launch_kernel(
-    f: CUfunction,
-    grid_dim_x: i32,
-    grid_dim_y: i32,
-    grid_dim_z: i32,
-    block_dim_x: i32,
-    block_dim_y: i32,
-    block_dim_z: i32,
-    shared_mem_bytes: i32,
-    h_stream: CUstream,
-    kernel_params: *mut *mut i32,
-    extra: *mut *mut i32,
-) -> Result<(), cudaError_t> {
-    let result = unsafe {
-        cuLaunchKernel(
-            f,
-            grid_dim_x as c_uint,
-            grid_dim_y as c_uint,
-            grid_dim_z as c_uint,
-            block_dim_x as c_uint,
-            block_dim_y as c_uint,
-            block_dim_z as c_uint,
-            shared_mem_bytes as c_uint,
-            h_stream,
-            kernel_params as *mut *mut c_void,
-            extra as *mut *mut c_void,
-        )
-    };
-
-    match result {
-        cudaError_t::cudaSuccess => Ok(()),
-        _ => Err(result),
-    }
-}
-
-pub fn get_function(
-    hfunc: *mut CUfunction,
-    hmod: CUmodule,
-    name: *const c_char,
-) -> Result<(), cudaError_t> {
-    let result = unsafe { cuModuleGetFunction(hfunc, hmod, name as *const c_char) };
-
-    match result {
-        cudaError_t::cudaSuccess => Ok(()),
-        _ => Err(result),
-    }
-}
 
 pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cudaError_t> {
     assert!(a.len() == b.len());
@@ -107,6 +47,19 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
     // cuLaunchKernel
     let mut f: CUfunction = std::ptr::null_mut();
     let h_stream: CUstream = std::ptr::null_mut();
+    let kernel_name = "vec_add"; // from PTX file
+    let path: &str = "all_cuda_kernels/add.ptx"; // of PTX file
+    if !Path::new(path).exists() {
+        return Err(cudaError_t::cudaErrorInvalidSource);
+        // panic!("PTX file not found at ptx_path: {}", ptx_path);
+    }
+
+    let mut hmod = std::ptr::null_mut();
+    cuda_module_load(path, &mut hmod).expect("Issue in module_load");
+
+    let name_string = CString::new(kernel_name).expect("Issue in name_string"); // name of kernel from PTX: vec_add
+    let name = name_string.as_ptr();
+    cuda_module_get_function(&mut f as *mut CUfunction, hmod, name).expect("Issue in get_function");
 
     // param_array: ChatGPT help
     // https://chatgpt.com/share/670afffd-cf64-8008-b96b-18b867d50200
@@ -126,28 +79,7 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
     let shared_mem_bytes = 0;
     let kernel_params = param_array.as_ptr() as *mut _;
     let extra: *mut *mut i32 = std::ptr::null_mut();
-
-    let name_string = CString::new("vec_add").expect("Issue in name_string"); // name of kernel from PTX: vec_add
-    let name = name_string.as_ptr();
-    let mut hmod = std::ptr::null_mut();
-
-    let path: &str = "all_cuda_kernels/add.ptx";
-    if !Path::new(path).exists() {
-        panic!("PTX file not found at path: {}", path);
-    }
-    let bytes = CString::new(path).expect("Failed to convert path to CString");
-    let _ = unsafe {
-        let result = cuModuleLoad(&mut hmod as *mut CUmodule, bytes.as_ptr());
-        match result {
-            cudaError_t::cudaSuccess => Ok(()),
-            _ => Err(result),
-        }
-    };
-    println!("module: {:?}", hmod); // hmod should not be 0x00
-
-    get_function(&mut f as *mut CUfunction, hmod, name).expect("Issue in get_function");
-
-    launch_kernel(
+    cuda_launch_kernel(
         f,
         grid_dim_x,
         grid_dim_y,
