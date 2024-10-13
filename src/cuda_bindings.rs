@@ -130,6 +130,18 @@ extern "C" {
     pub fn cuDeviceGetName(name: *mut c_char, len: c_int, dev: CUdevice) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__DEVICE.html#group__CUDA__DEVICE_1gc8bca3c97a78816303b8aa5773b741f2
+    pub fn cuDeviceGetDefaultMemPool(pool_out: *mut CUmemoryPool, dev: CUdevice) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__DEVICE.html#group__CUDA__DEVICE_1gdf186e9559d53a5eb18e572d48c1121b
+    pub fn cuDeviceGetMemPool(pool_out: *mut CUmemoryPool, dev: CUdevice) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
@@ -1058,3 +1070,7 @@ pub struct CUmod_st(c_void); // Using c_void abstracts away the underlying imple
                              //                                // of CUfunction. You don't need to know the exact structure or contents
                              //                                // of a CUfunction object in Rust.
 pub type CUmodule = *mut CUmod_st;
+
+#[repr(C)]
+pub struct CUmemPoolHandle_st(c_void);
+pub type CUmemoryPool = *mut CUmemPoolHandle_st;

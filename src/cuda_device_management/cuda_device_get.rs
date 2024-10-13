@@ -1,6 +1,9 @@
 use std::ffi::{c_char, c_int};
 
-use crate::cuda_bindings::{cuDeviceGet, cuDeviceGetCount, cuDeviceGetName, cudaError_t, CUdevice};
+use crate::cuda_bindings::{
+    cuDeviceGet, cuDeviceGetCount, cuDeviceGetDefaultMemPool, cuDeviceGetMemPool, cuDeviceGetName,
+    cudaError_t, CUdevice, CUmemoryPool,
+};
 
 pub fn cuda_device_get(device: *mut CUdevice, ordinal: i32) -> Result<(), cudaError_t> {
     let result = unsafe { cuDeviceGet(device, ordinal as c_int) };
@@ -33,11 +36,35 @@ pub fn cuda_device_get_name(
     }
 }
 
+pub fn cuda_device_get_default_mem_pool(
+    pool_out: *mut CUmemoryPool,
+    dev: CUdevice,
+) -> Result<(), cudaError_t> {
+    let result = unsafe { cuDeviceGetDefaultMemPool(pool_out, dev) };
+
+    match result {
+        cudaError_t::cudaSuccess => Ok(()),
+        _ => Err(result),
+    }
+}
+
+pub fn cuda_device_get_mem_pool(
+    pool_out: *mut CUmemoryPool,
+    dev: CUdevice,
+) -> Result<(), cudaError_t> {
+    let result = unsafe { cuDeviceGetMemPool(pool_out, dev) };
+
+    match result {
+        cudaError_t::cudaSuccess => Ok(()),
+        _ => Err(result),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use core::str;
 
-    use crate::cuda_initialization::cuda_init::cuda_init;
+    use crate::{cuda_bindings::CUmemPoolHandle_st, cuda_initialization::cuda_init::cuda_init};
 
     use super::*;
 
@@ -99,5 +126,29 @@ mod tests {
 
         let device_name_expected = "NVIDIA GeForce GTX 1650";
         assert!(name.contains(device_name_expected));
+    }
+
+    #[test]
+    fn test_cuda_get_device_default_mem_pool() {
+        let mut pool_out: *mut CUmemPoolHandle_st = std::ptr::null_mut();
+        let device: CUdevice = 0;
+
+        cuda_init(0).expect("Failed to initialize");
+
+        let result = cuda_device_get_default_mem_pool(&mut pool_out as *mut CUmemoryPool, device);
+        assert!(result.is_ok());
+        assert_ne!(pool_out, std::ptr::null_mut() as *mut CUmemPoolHandle_st); // Ensure the returned memory pool handle is not null
+    }
+
+    #[test]
+    fn test_cuda_get_device_mem_pool() {
+        let mut pool_out: *mut CUmemPoolHandle_st = std::ptr::null_mut();
+        let device: CUdevice = 0;
+
+        cuda_init(0).expect("Failed to initialize");
+
+        let result = cuda_device_get_mem_pool(&mut pool_out as *mut CUmemoryPool, device);
+        assert!(result.is_ok());
+        assert_ne!(pool_out, std::ptr::null_mut() as *mut CUmemPoolHandle_st); // Ensure the returned memory pool handle is not null
     }
 }
