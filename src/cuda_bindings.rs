@@ -98,6 +98,12 @@ extern "C" {
     pub fn cuGetErrorString(error: cudaError_t, pStr: *mut *const c_char) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__INITIALIZE.html#group__CUDA__INITIALIZE_1g0a2f1517e1bd8502c7194c3a8c134bc3
+    pub fn cuInit(Flags: c_uint) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
