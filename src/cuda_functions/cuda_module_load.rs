@@ -6,8 +6,7 @@ pub fn cuda_module_load(ptx_path: &str, hmod: &mut *mut CUmod_st) -> Result<(), 
     let bytes = CString::new(ptx_path).expect("Failed to convert path to CString");
 
     let result = unsafe { cuModuleLoad(hmod as *mut CUmodule, bytes.as_ptr()) };
-
-    println!("module: {:?}", hmod); // hmod should not be 0x0
+    println!("module loaded: {:?}", hmod); // hmod should not be 0x0
 
     match result {
         cudaError_t::cudaSuccess => Ok(()),
