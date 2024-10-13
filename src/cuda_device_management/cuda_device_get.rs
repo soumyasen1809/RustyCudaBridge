@@ -2,7 +2,7 @@ use std::ffi::{c_char, c_int};
 
 use crate::cuda_bindings::{
     cuDeviceGet, cuDeviceGetCount, cuDeviceGetDefaultMemPool, cuDeviceGetMemPool, cuDeviceGetName,
-    cudaError_t, CUdevice, CUmemoryPool,
+    cuDeviceSetMemPool, cudaError_t, CUdevice, CUmemoryPool,
 };
 
 pub fn cuda_device_get(device: *mut CUdevice, ordinal: i32) -> Result<(), cudaError_t> {
@@ -53,6 +53,15 @@ pub fn cuda_device_get_mem_pool(
     dev: CUdevice,
 ) -> Result<(), cudaError_t> {
     let result = unsafe { cuDeviceGetMemPool(pool_out, dev) };
+
+    match result {
+        cudaError_t::cudaSuccess => Ok(()),
+        _ => Err(result),
+    }
+}
+
+pub fn cuda_device_set_mem_pool(dev: CUdevice, pool_out: CUmemoryPool) -> Result<(), cudaError_t> {
+    let result = unsafe { cuDeviceSetMemPool(dev, pool_out) };
 
     match result {
         cudaError_t::cudaSuccess => Ok(()),
@@ -149,6 +158,24 @@ mod tests {
 
         let result = cuda_device_get_mem_pool(&mut pool_out as *mut CUmemoryPool, device);
         assert!(result.is_ok());
+        assert_ne!(pool_out, std::ptr::null_mut() as *mut CUmemPoolHandle_st); // Ensure the returned memory pool handle is not null
+    }
+
+    #[test]
+    fn test_cuda_set_device_mem_pool() {
+        let mut pool_out: *mut CUmemPoolHandle_st = std::ptr::null_mut();
+        let device: CUdevice = 0;
+
+        cuda_init(0).expect("Failed to initialize");
+
+        // Retrieve the memory pool first to get a valid pool handle for the device
+        let get_pool_result = cuda_device_get_mem_pool(&mut pool_out as *mut CUmemoryPool, device);
+        assert!(get_pool_result.is_ok());
+        assert_ne!(pool_out, std::ptr::null_mut() as *mut CUmemPoolHandle_st); // Ensure the returned memory pool handle is not null
+
+        // Set the device memory pool next
+        let set_pool_result = cuda_device_set_mem_pool(device, pool_out as CUmemoryPool);
+        assert!(set_pool_result.is_ok());
         assert_ne!(pool_out, std::ptr::null_mut() as *mut CUmemPoolHandle_st); // Ensure the returned memory pool handle is not null
     }
 }
