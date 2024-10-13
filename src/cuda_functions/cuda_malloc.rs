@@ -1,7 +1,7 @@
 use libc::size_t;
 use std::ffi::c_void;
 
-use super::cuda_bindings::{cudaError_t, cudaMalloc};
+use crate::cuda_bindings::*;
 
 pub fn cuda_malloc(dev_ptr: *mut *mut u8, size: usize) -> Result<(), cudaError_t> {
     let result = unsafe { cudaMalloc(dev_ptr as *mut *mut c_void, size as size_t) };

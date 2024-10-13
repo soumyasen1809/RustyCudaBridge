@@ -1,6 +1,6 @@
 use libc::c_char;
 
-use super::cuda_bindings::{cuModuleGetFunction, cudaError_t, CUfunction, CUmodule};
+use crate::cuda_bindings::*;
 
 pub fn cuda_module_get_function(
     hfunc: *mut CUfunction,
@@ -19,9 +19,9 @@ pub fn cuda_module_get_function(
 mod tests {
     use std::{ffi::CString, path::Path};
 
-    use crate::cuda_functions::{
-        cuda_malloc::cuda_malloc, cuda_module_get_function::cuda_module_get_function,
-        cuda_module_load::cuda_module_load,
+    use crate::{
+        cuda_functions::cuda_malloc::cuda_malloc,
+        cuda_module_management::cuda_module_load::cuda_module_load,
     };
 
     use super::*;

@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-use super::cuda_bindings::{cudaError_t, cudaFreeHost};
+use crate::cuda_bindings::*;
 
 pub fn cuda_free_host<T>(ptr: *mut T) -> Result<(), cudaError_t> {
     let result = unsafe { cudaFreeHost(ptr as *mut c_void) };
@@ -14,9 +14,8 @@ pub fn cuda_free_host<T>(ptr: *mut T) -> Result<(), cudaError_t> {
 
 #[cfg(test)]
 mod tests {
-    use crate::cuda_functions::{
-        cuda_bindings::cudaHostAllocFlag, cuda_host_alloc::cuda_host_alloc,
-    };
+
+    use crate::cuda_functions::cuda_host_alloc::cuda_host_alloc;
 
     use super::*;
 

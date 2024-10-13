@@ -1,14 +1,13 @@
 use std::{ffi::CString, path::Path};
 
+use crate::cuda_bindings::*;
+
 use crate::cuda_functions::{
-    cuda_bindings::{cudaError_t, CUfunction, CUstream},
-    cuda_free::cuda_free,
-    cuda_launch_kernel::cuda_launch_kernel,
-    cuda_malloc::cuda_malloc,
+    cuda_free::cuda_free, cuda_launch_kernel::cuda_launch_kernel, cuda_malloc::cuda_malloc,
     cuda_memcpy::cuda_memcpy,
-    cuda_module_get_function::cuda_module_get_function,
-    cuda_module_load::cuda_module_load,
 };
+use crate::cuda_module_management::cuda_module_get_function::cuda_module_get_function;
+use crate::cuda_module_management::cuda_module_load::cuda_module_load;
 
 pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cudaError_t> {
     assert!(a.len() == b.len());
@@ -29,19 +28,19 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
         dev_a,
         a.as_ptr() as *const u8,
         n as usize * std::mem::size_of::<i32>(), // IMP: The size needs to be multiplied by std::mem::size_of::<i32>()
-        crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyHostToDevice,
+        cudaMemcpyKind::cudaMemcpyHostToDevice,
     )?;
     cuda_memcpy(
         dev_b,
         b.as_ptr() as *const u8,
         n as usize * std::mem::size_of::<i32>(),
-        crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyHostToDevice,
+        cudaMemcpyKind::cudaMemcpyHostToDevice,
     )?;
     cuda_memcpy(
         dev_c,
         c.as_ptr() as *const u8,
         n as usize * std::mem::size_of::<i32>(),
-        crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyHostToDevice,
+        cudaMemcpyKind::cudaMemcpyHostToDevice,
     )?;
 
     // cuLaunchKernel
@@ -99,7 +98,7 @@ pub fn cuda_vec_add(a: &Vec<i32>, b: &Vec<i32>, n: i32) -> Result<Vec<i32>, cuda
         c.as_ptr() as *mut u8,
         dev_c,
         n as usize * std::mem::size_of::<i32>(),
-        crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyDeviceToHost,
+        cudaMemcpyKind::cudaMemcpyDeviceToHost,
     )?;
 
     // Free cuda memory

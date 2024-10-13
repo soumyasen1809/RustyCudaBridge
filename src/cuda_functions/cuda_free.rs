@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-use super::cuda_bindings::{cudaError_t, cudaFree};
+use crate::cuda_bindings::*;
 
 pub fn cuda_free<T>(dev_ptr: *mut T) -> Result<(), cudaError_t> {
     let result = unsafe { cudaFree(dev_ptr as *mut c_void) };

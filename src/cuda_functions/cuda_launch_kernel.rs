@@ -1,6 +1,6 @@
 use std::ffi::{c_uint, c_void};
 
-use super::cuda_bindings::{cuLaunchKernel, cudaError_t, CUfunction, CUstream};
+use crate::cuda_bindings::*;
 
 pub fn cuda_launch_kernel(
     f: CUfunction,
@@ -41,9 +41,13 @@ pub fn cuda_launch_kernel(
 mod tests {
     use std::{ffi::CString, path::Path};
 
-    use crate::cuda_functions::{
-        cuda_free::cuda_free, cuda_malloc::cuda_malloc, cuda_memcpy::cuda_memcpy,
-        cuda_module_get_function::cuda_module_get_function, cuda_module_load::cuda_module_load,
+    use crate::{
+        cuda_functions::{
+            cuda_free::cuda_free, cuda_malloc::cuda_malloc, cuda_memcpy::cuda_memcpy,
+        },
+        cuda_module_management::{
+            cuda_module_get_function::cuda_module_get_function, cuda_module_load::cuda_module_load,
+        },
     };
 
     use super::*;
@@ -70,21 +74,21 @@ mod tests {
             dev_a,
             a.as_ptr() as *const u8,
             n as usize * std::mem::size_of::<i32>(), // IMP: The size needs to be multiplied by std::mem::size_of::<i32>()
-            crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyHostToDevice,
+            cudaMemcpyKind::cudaMemcpyHostToDevice,
         )
         .unwrap();
         cuda_memcpy(
             dev_b,
             b.as_ptr() as *const u8,
             n as usize * std::mem::size_of::<i32>(),
-            crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyHostToDevice,
+            cudaMemcpyKind::cudaMemcpyHostToDevice,
         )
         .unwrap();
         cuda_memcpy(
             dev_c,
             c.as_ptr() as *const u8,
             n as usize * std::mem::size_of::<i32>(),
-            crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyHostToDevice,
+            cudaMemcpyKind::cudaMemcpyHostToDevice,
         )
         .unwrap();
 
@@ -141,7 +145,7 @@ mod tests {
             c.as_ptr() as *mut u8,
             dev_c,
             n as usize * std::mem::size_of::<i32>(),
-            crate::cuda_functions::cuda_bindings::cudaMemcpyKind::cudaMemcpyDeviceToHost,
+            cudaMemcpyKind::cudaMemcpyDeviceToHost,
         )
         .unwrap();
 

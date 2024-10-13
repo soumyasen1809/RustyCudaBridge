@@ -1,4 +1,4 @@
-use crate::cuda_functions::cuda_bindings::{cuModuleUnload, cudaError_t, CUmod_st};
+use crate::cuda_bindings::*;
 
 pub fn cuda_module_unload(hmod: *mut CUmod_st) -> Result<(), cudaError_t> {
     let result = unsafe { cuModuleUnload(hmod) };
@@ -18,9 +18,11 @@ pub fn cuda_module_unload(hmod: *mut CUmod_st) -> Result<(), cudaError_t> {
 mod tests {
     use std::path::Path;
 
-    use crate::cuda_functions::{
-        cuda_malloc::cuda_malloc, cuda_module_load::cuda_module_load,
-        cuda_module_unload::cuda_module_unload,
+    use crate::{
+        cuda_functions::cuda_malloc::cuda_malloc,
+        cuda_module_management::{
+            cuda_module_load::cuda_module_load, cuda_module_unload::cuda_module_unload,
+        },
     };
 
     #[test]

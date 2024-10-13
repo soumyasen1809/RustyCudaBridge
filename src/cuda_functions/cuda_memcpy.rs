@@ -1,7 +1,7 @@
 use libc::size_t;
 use std::ffi::c_void;
 
-use crate::cuda_functions::cuda_bindings::{cudaError_t, cudaMemcpy, cudaMemcpyKind};
+use crate::cuda_bindings::*;
 
 pub fn cuda_memcpy<T>(
     dst: *mut T,
