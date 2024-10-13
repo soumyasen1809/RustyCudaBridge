@@ -34,7 +34,6 @@ mod tests {
         )
         .unwrap(); // Note: removing cuda_malloc causes Issue in module_load: cudaErrorInitializationError (Why?)
 
-        // cuLaunchKernel
         let mut f: CUfunction = std::ptr::null_mut();
         let kernel_name = "vec_add"; // from PTX file
         let ptx_path: &str = "all_cuda_kernels/add.ptx"; // of PTX file
