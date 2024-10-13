@@ -1,9 +1,18 @@
 use std::ffi::c_int;
 
-use crate::cuda_bindings::{cuDeviceGet, cudaError_t, CUdevice};
+use crate::cuda_bindings::{cuDeviceGet, cuDeviceGetCount, cudaError_t, CUdevice};
 
 pub fn cuda_device_get(device: *mut CUdevice, ordinal: i32) -> Result<(), cudaError_t> {
     let result = unsafe { cuDeviceGet(device, ordinal as c_int) };
+
+    match result {
+        cudaError_t::cudaSuccess => Ok(()),
+        _ => Err(result),
+    }
+}
+
+pub fn cuda_device_get_count(count: *mut i32) -> Result<(), cudaError_t> {
+    let result = unsafe { cuDeviceGetCount(count as *mut c_int) };
 
     match result {
         cudaError_t::cudaSuccess => Ok(()),
@@ -26,5 +35,15 @@ mod tests {
 
         cuda_device_get(&mut device, ordinal).expect("Issue in getting device");
         assert_eq!(device, 0);
+    }
+
+    #[test]
+    fn test_cuda_get_device_count() {
+        let mut count: i32 = 0;
+
+        cuda_init(0).expect("Failed to initialize");
+
+        cuda_device_get_count(&mut count as *mut i32).expect("Issue in getting device");
+        assert_eq!(count, 1);
     }
 }

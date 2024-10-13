@@ -118,6 +118,12 @@ extern "C" {
     pub fn cuDeviceGet(device: *mut CUdevice, ordinal: c_int) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__DEVICE.html#group__CUDA__DEVICE_1g8bdd1cc7201304b01357b8034f6587cb
+    pub fn cuDeviceGetCount(count: *mut c_int) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
