@@ -80,6 +80,12 @@ extern "C" {
     pub fn cuModuleLoad(module: *mut CUmodule, name: *const c_char) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__MODULE.html#group__CUDA__MODULE_1g366093bd269dafd0af21f1c7d18115d3
+    pub fn cuModuleUnload(module: *mut CUmodule) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
