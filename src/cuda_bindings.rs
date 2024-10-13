@@ -104,6 +104,12 @@ extern "C" {
     pub fn cuInit(Flags: c_uint) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__VERSION.html#group__CUDA__VERSION_1g8b7a10395392e049006e61bcdc8ebe71
+    pub fn cuDriverGetVersion(driverVersion: *mut c_int) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
