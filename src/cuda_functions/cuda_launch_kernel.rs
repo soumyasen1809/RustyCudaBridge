@@ -49,7 +49,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_vec_add() {
+    fn test_cuda_launch_kernel() {
         let a = vec![1, 2, 3, 4, 5];
         let b = vec![6, 7, 8, 9, 10];
         let n = a.len() as i32;

@@ -7,7 +7,7 @@ pub fn cuda_module_load(ptx_path: &str, hmod: &mut *mut CUmod_st) -> Result<(), 
 
     let result = unsafe { cuModuleLoad(hmod as *mut CUmodule, bytes.as_ptr()) };
 
-    println!("module: {:?}", hmod); // hmod should not be 0x00
+    println!("module: {:?}", hmod); // hmod should not be 0x0
 
     match result {
         cudaError_t::cudaSuccess => Ok(()),
