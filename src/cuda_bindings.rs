@@ -154,6 +154,34 @@ extern "C" {
     pub fn cuDeviceTotalMem(bytes: *mut size_t, dev: CUdevice) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__PRIMARY__CTX.html#group__CUDA__PRIMARY__CTX_1g65f3e018721b6d90aa05cfb56250f469
+    pub fn cuDevicePrimaryCtxGetState(
+        dev: CUdevice,
+        flags: *mut c_uint,
+        active: *mut c_int,
+    ) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__PRIMARY__CTX.html#group__CUDA__PRIMARY__CTX_1gf2a8bc16f8df0c88031f6a1ba3d6e8ad
+    pub fn cuDevicePrimaryCtxRelease(dev: CUdevice) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__PRIMARY__CTX.html#group__CUDA__PRIMARY__CTX_1g5d38802e8600340283958a117466ce12
+    pub fn cuDevicePrimaryCtxReset(dev: CUdevice) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__PRIMARY__CTX.html#group__CUDA__PRIMARY__CTX_1gd779a84f17acdad0d9143d9fe719cfdf
+    pub fn cuDevicePrimaryCtxSetFlags(dev: CUdevice, flags: c_uint) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
