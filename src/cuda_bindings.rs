@@ -194,6 +194,12 @@ extern "C" {
     pub fn cuCtxDestroy(pctx: *mut CUcontext) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html#group__CUDA__CTX_1g088a90490dafca5893ef6fbebc8de8fb
+    pub fn cuCtxGetApiVersion(ctx: CUcontext, version: *mut c_uint) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
