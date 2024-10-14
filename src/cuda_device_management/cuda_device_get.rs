@@ -1,8 +1,10 @@
 use std::ffi::{c_char, c_int};
 
+use libc::size_t;
+
 use crate::cuda_bindings::{
     cuDeviceGet, cuDeviceGetCount, cuDeviceGetDefaultMemPool, cuDeviceGetMemPool, cuDeviceGetName,
-    cuDeviceSetMemPool, cudaError_t, CUdevice, CUmemoryPool,
+    cuDeviceSetMemPool, cuDeviceTotalMem, cudaError_t, CUdevice, CUmemoryPool,
 };
 
 pub fn cuda_device_get(device: *mut CUdevice, ordinal: i32) -> Result<(), cudaError_t> {
@@ -62,6 +64,15 @@ pub fn cuda_device_get_mem_pool(
 
 pub fn cuda_device_set_mem_pool(dev: CUdevice, pool_out: CUmemoryPool) -> Result<(), cudaError_t> {
     let result = unsafe { cuDeviceSetMemPool(dev, pool_out) };
+
+    match result {
+        cudaError_t::cudaSuccess => Ok(()),
+        _ => Err(result),
+    }
+}
+
+pub fn cuda_device_total_mem(bytes: &mut usize, dev: CUdevice) -> Result<(), cudaError_t> {
+    let result = unsafe { cuDeviceTotalMem(bytes as *mut size_t, dev) };
 
     match result {
         cudaError_t::cudaSuccess => Ok(()),
@@ -177,5 +188,16 @@ mod tests {
         let set_pool_result = cuda_device_set_mem_pool(device, pool_out as CUmemoryPool);
         assert!(set_pool_result.is_ok());
         assert_ne!(pool_out, std::ptr::null_mut() as *mut CUmemPoolHandle_st); // Ensure the returned memory pool handle is not null
+    }
+
+    #[test]
+    fn test_cuda_get_total_mem() {
+        let mut mem_bytes: usize = 0;
+        let device: CUdevice = 0;
+
+        cuda_init(0).expect("Failed to initialize");
+
+        cuda_device_total_mem(&mut mem_bytes, device).expect("Issue in getting total memory");
+        assert_eq!(mem_bytes, 4294639616);
     }
 }

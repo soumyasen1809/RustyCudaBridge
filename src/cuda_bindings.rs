@@ -148,6 +148,12 @@ extern "C" {
     pub fn cuDeviceSetMemPool(dev: CUdevice, pool_out: CUmemoryPool) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__DEVICE.html#group__CUDA__DEVICE_1gc6a0d6551335a3780f9f3c967a0fde5d
+    pub fn cuDeviceTotalMem(bytes: *mut size_t, dev: CUdevice) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
