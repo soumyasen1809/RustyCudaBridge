@@ -182,6 +182,18 @@ extern "C" {
     pub fn cuDevicePrimaryCtxSetFlags(dev: CUdevice, flags: c_uint) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html#group__CUDA__CTX_1g65dc0012348bc84810e2103a40d8e2cf
+    pub fn cuCtxCreate(pctx: *mut CUcontext, flags: c_uint, dev: CUdevice) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html#group__CUDA__CTX_1g27a365aebb0eb548166309f58a1e8b8e
+    pub fn cuCtxDestroy(pctx: *mut CUcontext) -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
@@ -1114,3 +1126,7 @@ pub type CUmodule = *mut CUmod_st;
 #[repr(C)]
 pub struct CUmemPoolHandle_st(c_void);
 pub type CUmemoryPool = *mut CUmemPoolHandle_st;
+
+#[repr(C)]
+pub struct CUctx_st(c_void);
+pub type CUcontext = *mut CUctx_st;
