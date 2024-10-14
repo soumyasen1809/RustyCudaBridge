@@ -200,6 +200,30 @@ extern "C" {
     pub fn cuCtxGetApiVersion(ctx: CUcontext, version: *mut c_uint) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html#group__CUDA__CTX_1g8f13165846b73750693640fb3e8380d0
+    pub fn cuCtxGetCurrent(pctx: *mut CUcontext) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html#group__CUDA__CTX_1g2fac188026a062d92e91a8687d0a7902
+    pub fn cuCtxPopCurrent(pctx: *mut CUcontext) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html#group__CUDA__CTX_1gb02d4c850eb16f861fe5a29682cc90ba
+    pub fn cuCtxPushCurrent(ctx: CUcontext) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html#group__CUDA__CTX_1g7a54725f28d34b8c6299f0c6ca579616
+    pub fn cuCtxSynchronize() -> cudaError_t;
+}
+
 #[repr(C)]
 #[derive(Debug, PartialEq)]
 pub enum cudaError_t {
