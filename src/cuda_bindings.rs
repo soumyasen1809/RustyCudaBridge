@@ -3,8 +3,9 @@ use libc::{c_char, size_t};
 use std::ffi::{c_int, c_uint, c_void};
 
 use crate::{
-    cuda_device_attributes::CUdevice_attribute, cuda_errors::cudaError_t,
-    cuda_memory_enums::CUmem_advise,
+    cuda_device_attributes::CUdevice_attribute,
+    cuda_errors::cudaError_t,
+    cuda_memory_enums::{CUmem_advise, CUstream_flags},
 };
 
 #[link(name = "cuda")]
@@ -248,6 +249,23 @@ extern "C" {
         advice: CUmem_advise,
         device: CUdevice,
     ) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__UNIFIED.html#group__CUDA__UNIFIED_1gfe94f8b7fb56291ebcea44261aa4cb84
+    pub fn cuMemPrefetchAsync(
+        devPtr: CUdeviceptr,
+        count: size_t,
+        dstDevice: CUdevice,
+        hStream: CUstream,
+    ) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__STREAM.html#group__CUDA__STREAM_1ga581f0c5833e21ded8b5a56594e243f4
+    pub fn cuStreamCreate(phStream: *mut CUstream, Flags: CUstream_flags) -> cudaError_t;
 }
 
 #[repr(C)]

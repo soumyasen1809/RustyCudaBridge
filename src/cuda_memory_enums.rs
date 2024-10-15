@@ -10,3 +10,10 @@ pub enum CUmem_advise {
     CU_MEM_ADVISE_SET_ACCESSED_BY = 5,
     CU_MEM_ADVISE_UNSET_ACCESSED_BY = 6,
 }
+
+#[repr(C)]
+#[derive(Debug, PartialEq)]
+pub enum CUstream_flags {
+    CU_STREAM_DEFAULT = 0x0,
+    CU_STREAM_NON_BLOCKING = 0x1,
+}

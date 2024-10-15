@@ -9,6 +9,7 @@ pub mod cuda_kernels;
 pub mod cuda_memory_enums;
 pub mod cuda_memory_management;
 pub mod cuda_module_management;
+pub mod cuda_stream_management;
 pub mod cuda_unified_addressing;
 pub mod cuda_version_management;
 pub mod primary_context_management;

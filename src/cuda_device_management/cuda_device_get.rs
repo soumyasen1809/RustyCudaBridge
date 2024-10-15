@@ -131,6 +131,19 @@ mod tests {
     }
 
     #[test]
+    fn test_cuda_get_attribute_unified_addressing() {
+        let mut attribute_value = 0;
+        let atribute_to_query = CUdevice_attribute::CU_DEVICE_ATTRIBUTE_UNIFIED_ADDRESSING;
+        let device: CUdevice = 0;
+
+        cuda_init(0).expect("Failed to initialize");
+
+        cuda_device_get_attribute(&mut attribute_value as *mut i32, atribute_to_query, device)
+            .expect("Issue in getting attribute");
+        assert_eq!(attribute_value, 1);
+    }
+
+    #[test]
     fn test_cuda_get_device_count() {
         let mut count: i32 = 0;
 
