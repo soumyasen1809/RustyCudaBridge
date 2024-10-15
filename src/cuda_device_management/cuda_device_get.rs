@@ -4,14 +4,29 @@ use libc::size_t;
 
 use crate::{
     cuda_bindings::{
-        cuDeviceGet, cuDeviceGetCount, cuDeviceGetDefaultMemPool, cuDeviceGetMemPool,
-        cuDeviceGetName, cuDeviceSetMemPool, cuDeviceTotalMem, CUdevice, CUmemoryPool,
+        cuDeviceGet, cuDeviceGetAttribute, cuDeviceGetCount, cuDeviceGetDefaultMemPool,
+        cuDeviceGetMemPool, cuDeviceGetName, cuDeviceSetMemPool, cuDeviceTotalMem, CUdevice,
+        CUmemoryPool,
     },
+    cuda_device_attributes::CUdevice_attribute,
     cuda_errors::cudaError_t,
 };
 
 pub fn cuda_device_get(device: *mut CUdevice, ordinal: i32) -> Result<(), cudaError_t> {
     let result = unsafe { cuDeviceGet(device, ordinal as c_int) };
+
+    match result {
+        cudaError_t::cudaSuccess => Ok(()),
+        _ => Err(result),
+    }
+}
+
+pub fn cuda_device_get_attribute(
+    pi: *mut i32,
+    attrib: CUdevice_attribute,
+    dev: CUdevice,
+) -> Result<(), cudaError_t> {
+    let result = unsafe { cuDeviceGetAttribute(pi as *mut c_int, attrib, dev) };
 
     match result {
         cudaError_t::cudaSuccess => Ok(()),
@@ -100,6 +115,19 @@ mod tests {
 
         cuda_device_get(&mut device, ordinal).expect("Issue in getting device");
         assert_eq!(device, 0);
+    }
+
+    #[test]
+    fn test_cuda_get_attribute() {
+        let mut attribute_value = 0;
+        let atribute_to_query = CUdevice_attribute::CU_DEVICE_ATTRIBUTE_MAX_BLOCK_DIM_X;
+        let device: CUdevice = 0;
+
+        cuda_init(0).expect("Failed to initialize");
+
+        cuda_device_get_attribute(&mut attribute_value as *mut i32, atribute_to_query, device)
+            .expect("Issue in getting attribute");
+        assert_eq!(attribute_value, 1024);
     }
 
     #[test]
