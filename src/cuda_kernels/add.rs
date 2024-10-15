@@ -3,7 +3,7 @@ use std::{ffi::CString, path::Path};
 use crate::cuda_bindings::*;
 
 use crate::cuda_errors::cudaError_t;
-use crate::cuda_functions::{
+use crate::cuda_memory_management::{
     cuda_free::cuda_free, cuda_launch_kernel::cuda_launch_kernel, cuda_malloc::cuda_malloc,
     cuda_memcpy::cuda_memcpy,
 };

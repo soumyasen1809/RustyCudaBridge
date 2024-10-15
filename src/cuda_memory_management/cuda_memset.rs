@@ -16,7 +16,7 @@ pub fn cuda_memset<T>(dev_ptr: *mut T, value: i32, count: usize) -> Result<(), c
 
 #[cfg(test)]
 mod tests {
-    use crate::cuda_functions::{
+    use crate::cuda_memory_management::{
         cuda_free::cuda_free, cuda_malloc::cuda_malloc, cuda_memcpy::cuda_memcpy,
     };
 

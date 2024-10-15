@@ -27,7 +27,7 @@ pub fn cuda_memcpy<T>(
 
 #[cfg(test)]
 mod tests {
-    use crate::cuda_functions::{cuda_free::cuda_free, cuda_malloc::cuda_malloc};
+    use crate::cuda_memory_management::{cuda_free::cuda_free, cuda_malloc::cuda_malloc};
 
     use super::*;
 

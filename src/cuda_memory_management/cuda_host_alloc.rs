@@ -18,7 +18,7 @@ pub fn cuda_host_alloc(
 
 #[cfg(test)]
 mod tests {
-    use crate::cuda_functions::cuda_free::cuda_free;
+    use crate::cuda_memory_management::cuda_free::cuda_free;
 
     use super::*;
 

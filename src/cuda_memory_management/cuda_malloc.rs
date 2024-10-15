@@ -15,7 +15,7 @@ pub fn cuda_malloc(dev_ptr: *mut *mut u8, size: usize) -> Result<(), cudaError_t
 
 #[cfg(test)]
 mod tests {
-    use crate::cuda_functions::cuda_free::cuda_free;
+    use crate::cuda_memory_management::cuda_free::cuda_free;
 
     use super::*;
 

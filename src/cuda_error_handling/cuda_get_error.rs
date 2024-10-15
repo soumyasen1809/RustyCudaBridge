@@ -33,7 +33,7 @@ pub fn cuda_get_error_string(
 mod tests {
     use std::ffi::CStr;
 
-    use crate::cuda_functions::cuda_malloc::cuda_malloc;
+    use crate::cuda_memory_management::cuda_malloc::cuda_malloc;
 
     use super::*;
 

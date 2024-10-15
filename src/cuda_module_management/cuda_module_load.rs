@@ -19,7 +19,7 @@ mod tests {
     use std::path::Path;
 
     use crate::{
-        cuda_functions::cuda_malloc::cuda_malloc,
+        cuda_memory_management::cuda_malloc::cuda_malloc,
         cuda_module_management::cuda_module_load::cuda_module_load,
     };
 

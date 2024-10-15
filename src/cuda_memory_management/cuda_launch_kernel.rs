@@ -42,7 +42,7 @@ mod tests {
     use std::{ffi::CString, path::Path};
 
     use crate::{
-        cuda_functions::{
+        cuda_memory_management::{
             cuda_free::cuda_free, cuda_malloc::cuda_malloc, cuda_memcpy::cuda_memcpy,
         },
         cuda_module_management::{

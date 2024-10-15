@@ -15,7 +15,7 @@ pub fn cuda_free_host<T>(ptr: *mut T) -> Result<(), cudaError_t> {
 #[cfg(test)]
 mod tests {
 
-    use crate::cuda_functions::cuda_host_alloc::cuda_host_alloc;
+    use crate::cuda_memory_management::cuda_host_alloc::cuda_host_alloc;
 
     use super::*;
 
