@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-use crate::cuda_bindings::*;
+use crate::{cuda_bindings::*, cuda_errors::cudaError_t};
 
 pub fn cuda_free_host<T>(ptr: *mut T) -> Result<(), cudaError_t> {
     let result = unsafe { cudaFreeHost(ptr as *mut c_void) };

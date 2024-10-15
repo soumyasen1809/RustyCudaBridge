@@ -1,6 +1,6 @@
 use std::ffi::c_uint;
 
-use crate::cuda_bindings::{cuInit, cudaError_t};
+use crate::{cuda_bindings::cuInit, cuda_errors::cudaError_t};
 
 pub fn cuda_init(flags: u8) -> Result<(), cudaError_t> {
     let result = unsafe { cuInit(flags as c_uint) };

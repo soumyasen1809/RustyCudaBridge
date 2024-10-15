@@ -1,8 +1,11 @@
 use std::ffi::c_uint;
 
-use crate::cuda_bindings::{
-    cuCtxCreate, cuCtxDestroy, cuCtxGetApiVersion, cuCtxGetCurrent, cuCtxPopCurrent,
-    cuCtxPushCurrent, cuCtxSynchronize, cudaError_t, CUcontext, CUdevice,
+use crate::{
+    cuda_bindings::{
+        cuCtxCreate, cuCtxDestroy, cuCtxGetApiVersion, cuCtxGetCurrent, cuCtxPopCurrent,
+        cuCtxPushCurrent, cuCtxSynchronize, CUcontext, CUdevice,
+    },
+    cuda_errors::cudaError_t,
 };
 
 pub fn cuda_ctx_create(pctx: *mut CUcontext, flags: u32, dev: CUdevice) -> Result<(), cudaError_t> {

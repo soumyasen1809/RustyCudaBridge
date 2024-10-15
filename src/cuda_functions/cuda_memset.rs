@@ -1,7 +1,7 @@
 use libc::{c_int, size_t};
 use std::ffi::c_void;
 
-use crate::cuda_bindings::*;
+use crate::{cuda_bindings::*, cuda_errors::cudaError_t};
 
 pub fn cuda_memset<T>(dev_ptr: *mut T, value: i32, count: usize) -> Result<(), cudaError_t> {
     let result = unsafe { cudaMemset(dev_ptr as *mut c_void, value as c_int, count as size_t) };

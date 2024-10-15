@@ -2,9 +2,12 @@ use std::ffi::{c_char, c_int};
 
 use libc::size_t;
 
-use crate::cuda_bindings::{
-    cuDeviceGet, cuDeviceGetCount, cuDeviceGetDefaultMemPool, cuDeviceGetMemPool, cuDeviceGetName,
-    cuDeviceSetMemPool, cuDeviceTotalMem, cudaError_t, CUdevice, CUmemoryPool,
+use crate::{
+    cuda_bindings::{
+        cuDeviceGet, cuDeviceGetCount, cuDeviceGetDefaultMemPool, cuDeviceGetMemPool,
+        cuDeviceGetName, cuDeviceSetMemPool, cuDeviceTotalMem, CUdevice, CUmemoryPool,
+    },
+    cuda_errors::cudaError_t,
 };
 
 pub fn cuda_device_get(device: *mut CUdevice, ordinal: i32) -> Result<(), cudaError_t> {

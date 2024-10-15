@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 
-use crate::cuda_bindings::*;
+use crate::{cuda_bindings::*, cuda_errors::cudaError_t};
 
 pub fn cuda_host_alloc(
     p_host: *mut *mut u8,

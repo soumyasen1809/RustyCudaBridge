@@ -1,4 +1,4 @@
-use crate::cuda_bindings::*;
+use crate::{cuda_bindings::*, cuda_errors::cudaError_t};
 
 pub fn cuda_module_unload(hmod: *mut CUmod_st) -> Result<(), cudaError_t> {
     let result = unsafe { cuModuleUnload(hmod) };

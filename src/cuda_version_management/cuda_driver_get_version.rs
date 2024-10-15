@@ -1,6 +1,6 @@
 use libc::c_int;
 
-use crate::cuda_bindings::{cuDriverGetVersion, cudaError_t};
+use crate::{cuda_bindings::cuDriverGetVersion, cuda_errors::cudaError_t};
 
 pub fn cuda_driver_get_version(driver_version: *mut i32) -> Result<(), cudaError_t> {
     let result = unsafe { cuDriverGetVersion(&mut *driver_version as *mut c_int) };

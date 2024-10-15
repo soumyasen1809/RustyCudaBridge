@@ -1,7 +1,9 @@
 pub mod cuda_bindings;
 pub mod cuda_context_management;
+pub mod cuda_device_attributes;
 pub mod cuda_device_management;
 pub mod cuda_error_handling;
+pub mod cuda_errors;
 pub mod cuda_functions;
 pub mod cuda_initialization;
 pub mod cuda_kernels;

@@ -1,6 +1,9 @@
 use std::ffi::c_char;
 
-use crate::cuda_bindings::{cuGetErrorName, cuGetErrorString, cudaError_t};
+use crate::{
+    cuda_bindings::{cuGetErrorName, cuGetErrorString},
+    cuda_errors::cudaError_t,
+};
 
 pub fn cuda_get_error_name(
     err: cudaError_t,

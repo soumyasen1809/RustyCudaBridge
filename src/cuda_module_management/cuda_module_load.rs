@@ -1,6 +1,6 @@
 use std::ffi::CString;
 
-use crate::cuda_bindings::*;
+use crate::{cuda_bindings::*, cuda_errors::cudaError_t};
 
 pub fn cuda_module_load(ptx_path: &str, hmod: &mut *mut CUmod_st) -> Result<(), cudaError_t> {
     let bytes = CString::new(ptx_path).expect("Failed to convert path to CString");

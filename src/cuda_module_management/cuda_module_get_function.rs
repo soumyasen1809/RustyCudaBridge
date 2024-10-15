@@ -1,6 +1,6 @@
 use libc::c_char;
 
-use crate::cuda_bindings::*;
+use crate::{cuda_bindings::*, cuda_errors::cudaError_t};
 
 pub fn cuda_module_get_function(
     hfunc: *mut CUfunction,
