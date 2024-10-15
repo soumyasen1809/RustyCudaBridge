@@ -2,7 +2,10 @@
 use libc::{c_char, size_t};
 use std::ffi::{c_int, c_uint, c_void};
 
-use crate::{cuda_device_attributes::CUdevice_attribute, cuda_errors::cudaError_t};
+use crate::{
+    cuda_device_attributes::CUdevice_attribute, cuda_errors::cudaError_t,
+    cuda_memory_enums::CUmem_advise,
+};
 
 #[link(name = "cuda")]
 extern "C" {
@@ -236,6 +239,17 @@ extern "C" {
     pub fn cuCtxSynchronize() -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__UNIFIED.html#group__CUDA__UNIFIED_1g27608c857a9254789c13f3e3b72029e2
+    pub fn cuMemAdvise(
+        devPtr: CUdeviceptr,
+        count: size_t,
+        advice: CUmem_advise,
+        device: CUdevice,
+    ) -> cudaError_t;
+}
+
 #[repr(C)]
 pub enum cudaMemcpyKind {
     cudaMemcpyHostToHost = 0,
@@ -276,3 +290,5 @@ pub type CUmemoryPool = *mut CUmemPoolHandle_st;
 #[repr(C)]
 pub struct CUctx_st(c_void);
 pub type CUcontext = *mut CUctx_st;
+
+pub type CUdeviceptr = c_uint;
