@@ -17,3 +17,11 @@ pub enum CUstream_flags {
     CU_STREAM_DEFAULT = 0x0,
     CU_STREAM_NON_BLOCKING = 0x1,
 }
+
+#[repr(C)]
+#[derive(Debug, PartialEq)]
+pub enum CUstreamCaptureMode {
+    CU_STREAM_CAPTURE_MODE_GLOBAL = 0,
+    CU_STREAM_CAPTURE_MODE_THREAD_LOCAL = 1,
+    CU_STREAM_CAPTURE_MODE_RELAXED = 2,
+}

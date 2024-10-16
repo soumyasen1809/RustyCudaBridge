@@ -5,7 +5,7 @@ use std::ffi::{c_int, c_uint, c_void};
 use crate::{
     cuda_device_attributes::CUdevice_attribute,
     cuda_errors::cudaError_t,
-    cuda_memory_enums::{CUmem_advise, CUstream_flags},
+    cuda_memory_enums::{CUmem_advise, CUstreamCaptureMode, CUstream_flags},
 };
 
 #[link(name = "cuda")]
@@ -266,6 +266,12 @@ extern "C" {
 extern "C" {
     // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__STREAM.html#group__CUDA__STREAM_1ga581f0c5833e21ded8b5a56594e243f4
     pub fn cuStreamCreate(phStream: *mut CUstream, Flags: CUstream_flags) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__STREAM.html#group__CUDA__STREAM_1g767167da0bbf07157dc20b6c258a2143
+    pub fn cuStreamBeginCapture(hStream: CUstream, mode: CUstreamCaptureMode) -> cudaError_t;
 }
 
 #[repr(C)]
