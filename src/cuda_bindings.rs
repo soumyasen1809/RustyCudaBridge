@@ -280,6 +280,22 @@ extern "C" {
     pub fn cuStreamCopyAttributes(dst: CUstream, src: CUstream) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__STREAM.html#group__CUDA__STREAM_1g95c1a8c7c3dacb13091692dd9c7f7471
+    pub fn cuStreamCreateWithPriority(
+        phStream: *mut CUstream,
+        Flags: CUstream_flags,
+        priority: c_int,
+    ) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__STREAM.html#group__CUDA__STREAM_1g244c8833de4596bcd31a06cdf21ee758
+    pub fn cuStreamDestroy(hStream: CUstream) -> cudaError_t;
+}
+
 #[repr(C)]
 pub enum cudaMemcpyKind {
     cudaMemcpyHostToHost = 0,
