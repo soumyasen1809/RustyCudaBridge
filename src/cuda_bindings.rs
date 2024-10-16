@@ -274,6 +274,12 @@ extern "C" {
     pub fn cuStreamBeginCapture(hStream: CUstream, mode: CUstreamCaptureMode) -> cudaError_t;
 }
 
+#[link(name = "cuda")]
+extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__STREAM.html#group__CUDA__STREAM_1g680f5399f6126cc4a99bc5eee4c2eff0
+    pub fn cuStreamCopyAttributes(dst: CUstream, src: CUstream) -> cudaError_t;
+}
+
 #[repr(C)]
 pub enum cudaMemcpyKind {
     cudaMemcpyHostToHost = 0,
