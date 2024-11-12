@@ -3,7 +3,7 @@ use std::ffi::c_uint;
 use crate::{
     cuda_bindings::{
         cuCtxCreate, cuCtxDestroy, cuCtxGetApiVersion, cuCtxGetCurrent, cuCtxPopCurrent,
-        cuCtxPushCurrent, cuCtxSynchronize, CUcontext, CUdevice,
+        cuCtxPushCurrent, cuCtxSynchronize, cuCtxWaitEvent, CUcontext, CUdevice, CUevent,
     },
     cuda_errors::cudaError_t,
 };
@@ -75,9 +75,22 @@ pub fn cuda_ctx_synchronize() -> Result<(), cudaError_t> {
     }
 }
 
+pub fn cuda_ctx_wait_event(h_ctx: CUcontext, h_event: CUevent) -> Result<(), cudaError_t> {
+    let result = unsafe { cuCtxWaitEvent(h_ctx, h_event) };
+    println!("result: {:?}", result);
+
+    match result {
+        cudaError_t::cudaSuccess => Ok(()),
+        _ => Err(result),
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::{cuda_bindings::CUctx_st, cuda_initialization::cuda_init::cuda_init};
+    use crate::{
+        cuda_bindings::{CUctx_st, CUevent_st},
+        cuda_initialization::cuda_init::cuda_init,
+    };
 
     use super::*;
 
@@ -179,6 +192,21 @@ mod tests {
         cuda_ctx_create(&mut pctx as *mut CUcontext, flags, device).unwrap();
 
         let result = cuda_ctx_synchronize();
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_cuda_ctx_wait_event() {
+        let mut hctx: *mut CUctx_st = std::ptr::null_mut();
+        let flags: u32 = 0;
+        let device: CUdevice = 0;
+        let hevent: *mut CUevent_st = std::ptr::null_mut();
+
+        cuda_init(0).expect("Failed to initialize");
+
+        cuda_ctx_create(&mut hctx as *mut CUcontext, flags, device).unwrap();
+
+        let result = cuda_ctx_wait_event(hctx, hevent as CUevent);
         assert!(result.is_ok());
     }
 }

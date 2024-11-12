@@ -242,6 +242,12 @@ extern "C" {
 
 #[link(name = "cuda")]
 extern "C" {
+    // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__CTX.html#group__CUDA__CTX_1gcf64e420275a8141b1f12bfce3f478f9
+    pub fn cuCtxWaitEvent(hCtx: CUcontext, hEvent: CUevent) -> cudaError_t;
+}
+
+#[link(name = "cuda")]
+extern "C" {
     // https://docs.nvidia.com/cuda/cuda-driver-api/group__CUDA__UNIFIED.html#group__CUDA__UNIFIED_1g27608c857a9254789c13f3e3b72029e2
     pub fn cuMemAdvise(
         devPtr: CUdeviceptr,
@@ -338,3 +344,7 @@ pub struct CUctx_st(c_void);
 pub type CUcontext = *mut CUctx_st;
 
 pub type CUdeviceptr = c_uint;
+
+#[repr(C)]
+pub struct CUevent_st(c_void);
+pub type CUevent = *mut CUevent_st;
